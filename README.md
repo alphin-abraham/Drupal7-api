@@ -10,7 +10,7 @@ This document describes how to read/write entities to/from Drupal using the Serv
 
 Now to create a service, we'll start with the basics... go to **Structure -> Services -> Add**, and configure api end point:
 
-|                |                          |
+|        Field        |          Value                |
 |----------------|-------------------------------|
 |Name|`apis`            |
 |End point tile          |`API`            |
