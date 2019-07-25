@@ -1,0 +1,82 @@
+# To run artillary load test run this command on terminal.
+# `artillery run -o report.json tests.yaml`
+#  To generete html report
+# `artillery report report.json`
+
+config:
+  target: "http://webcom-load-balancer-1090450183.us-east-1.elb.amazonaws.com"
+  tls:
+    rejectUnauthorized: false
+  processor: "./artillary-utilities.js"
+  content-type: "application/json"
+  phases:
+    - duration: 60
+      arrivalRate: 5
+
+scenarios:
+  - flow:
+      - log: "user registration"
+      - function: "generateuserData"
+      - post:
+          url: "/api/user/register.json"
+          # afterResponse: "responseLogger"
+          json:
+            name: "{{ name }}"
+            mail: "{{ email }}"
+            pass: '{ "pass1" : "{{ password }}", "pass2" : "{{ password }}" }'
+          capture:
+            - json: "$.uid"
+              as: "uid"
+
+      - log: "Sent a request to /user/register with {{ name }}, {{ email }}, {{ password }} {{ uid }}"
+
+
+      # - log: "get user name"
+      # - get:
+      #     url: "/api/user/{{ uid }}.json"
+      #     # afterResponse: "responseLogger"
+      #     capture:
+      #        - json: "$.name"
+      #          as: username
+      # - log: "username:  {{ username }}"
+
+
+      - log: "csrf token getting"
+      - get:
+          url: "/services/session/token"
+          # afterResponse: "responseLogger"
+          capture:
+             - regexp: "[^]*"
+               as: token
+      - log: "token {{ token }}"
+
+      - log: "user logging"
+      - post:
+          url: "/api/user/login.json"
+          headers:
+            X-CSRF-Token: {{ token }}
+          json:
+            username: "{{ name }}"
+            password: "{{ password }}"
+
+      - log: "csrf token getting"
+      - get:
+          url: "/services/session/token"
+          capture:
+             - regexp: "[^]*"
+               as: token
+
+      - log: "node article post"
+      - post:
+          url: "/api/node.json"
+          auth:
+            user: "admin"
+            pass: "admin"
+          headers:
+            X-CSRF-Token: {{ token }}
+          afterResponse: "requestLogger"
+          json:
+            type: "article"
+            title: "Test article from artillary - {{ $randomNumber(1,10000) }}"
+            language: "und"
+            body: "Some random text {{ $randomString() }}"
