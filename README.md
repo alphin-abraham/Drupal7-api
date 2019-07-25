@@ -27,7 +27,9 @@ Pass CSRF token `X-CSRF-Token` with all POST,PUT, and DELETE Requests.
 
 ## CSRF token
 
-http://localhost/drupal-7/services/session/token
+````
+GET: http://localhost/drupal-7/services/session/token
+````
 
 
 ## Session Authentication
