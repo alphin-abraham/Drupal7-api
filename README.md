@@ -3,7 +3,7 @@
 
 This document describes how to read/write entities to/from Drupal using the Services module. It also covers how to handle session authentication. Let's get started...
 
-# Installation and Setup
+## Installation and Setup
 
 - Download the Services Module
 - Enable It
