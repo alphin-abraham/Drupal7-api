@@ -1,7 +1,9 @@
-# To run artillary load test run this command on terminal.
-# `artillery run -o report.json tests.yaml`
+#  To run artillary load test run this command on terminal.
+#  `artillery run -o report.json tests.yaml`
 #  To generete html report
-# `artillery report report.json`
+#  `artillery report report.json`
+#
+#  Basic auth: {"username" : "admn", "password" : "adimn"}
 
 config:
   target: "http://webcom-load-balancer-1090450183.us-east-1.elb.amazonaws.com"
